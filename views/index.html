@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Management</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+        integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
+</head>
+<body>
+    <div id="main" class="container">
+        <h1 style="text-align: center;">Database Management</h1>
+        <!-- <ul id="userList"></ul> -->
+        <form id="my-form" action="http://localhost:3000/user" method="POST" onsubmit="addUser(event)">
+            <label for="name">Name: </label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email: </label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="phone">Contact: </label>
+            <input type="tel" id="phone" name="phone" required>
+
+            <button type="submit">Add Record</button>
+        </form>
+
+        <ul id="dataItems"></ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        async function addUser(event) {
+            try{
+                event.preventDefault();
+
+                const name = document.getElementById("name").value;
+                const email = document.getElementById("email").value;
+                const phone = document.getElementById("phone").value;
+
+                const user = {
+                    name: name,
+                    email: email,
+                    phone: phone
+                };
+
+                const response = await axios.post("http://localhost:3000/user", user);
+
+                console.log(response);
+                displayUser(response.data);
+
+                document.getElementById("name").value = '';
+                document.getElementById("email").value = '';
+                document.getElementById("phone").value = '';
+
+            } catch(error) {
+                document.body.innerHTML =
+                    document.body.innerHTML + "<h4>Something went wrong</h4>";
+                console.log(error);
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", async () => {
+            try{
+                const response = await axios.get("http://localhost:3000/user");
+
+                console.log(response.data[0]);
+
+                for( i=0; i<response.data.length; i++){
+                    displayUser(response.data[i]);
+                    console.log(response.data[i]);
+                }
+            } catch(err){
+                document.body.innerHTML =
+                    document.body.innerHTML + "<h4>Something went wrong</h4>";
+                console.log(err);
+            }
+        });
+
+        function displayUser(user) {
+            let parentNode = document.getElementById("dataItems");
+            const childNode = `<li id=${user.id}>${user.name}-${user.email}-${user.phone}
+                                <button onclick=deleteUser('${user.id}')>Delete</button>`;
+            parentNode.innerHTML += childNode;
+        }
+
+        async function deleteUser(userid) {
+            try{
+                await axios.delete(`http://localhost:3000/user/${userid}`);
+                removeFromScreen(userid);
+            } catch(err){
+                document.body.innerHTML =
+                    document.body.innerHTML + "<h4>Something went wrong</h4>";
+                console.log(err);
+            }
+
+        }
+
+        function removeFromScreen(id){
+            let parent = document.getElementById("dataItems");
+            const childNodeDeleted = document.getElementById(id);
+
+            parent.removeChild(childNodeDeleted);
+        }
+
+
+
+
+
+
+
+
+
+        // document.addEventListener('DOMContentLoaded', async () => {
+        //     const dataForm = document.getElementById('my-form');
+        //     const dataList = document.getElementById('dataList');
+
+        //     await fetchData();
+
+        //     dataForm.addEventListener('submit', async (event) => {
+        //         event.preventDefault();
+        //         await addUser();
+        //         // const formData = new FormData(dataForm);
+        //         // const data = {};
+        //         // formData.forEach((value, key) => {
+        //         //     data[key] = value
+        //         // })
+        //     });
+        // });
+
+        // async function fetchData() {
+        //     try {
+        //         const response = await fetch('http://localhost:3000/user');
+        //         const data = await response.json();
+        //         displayUsers(data);
+        //     } catch(error) {
+        //         console.error('Error fetching users:', error);
+        //     }
+        // }
+
+        // function displayUsers(users) {
+        //     const userList = document.getElementById('userList');
+        //     userList.innerHTML = '';
+
+        //     users.forEach(user => {
+        //         const listItem = document.createElement('li');
+        //         listItem.textContent = `${user.name} - ${user.email} - ${user.phone}`;
+        //         userList.appendChild(listItem);
+        //     });
+        // }
+
+        // async function addUser() {
+        //     const name = document.getElementById('name').value;
+        //     const email = document.getElementById('email').value;
+        //     const phone = document.getElementById('phone').value;
+
+        //     try{
+        //         const response = await fetch('http://localhost:3000/user', {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type' : 'application/json',
+        //             },
+        //             body: JSON.stringify({ name, email, phone}),
+        //         });
+
+        //         await response.json();
+        //         await fetchData();
+        //         document.getElementById('my-form').reset();
+        //     } catch(error) {
+        //         console.error('Error adding user:', error);
+        //     }
+        // }
+
+
+
+//                 if (response.ok){
+//                     fetchData();
+//                 } else {
+//                     console.error('Failed to insert data');
+//                 }
+//             });
+
+//             async function fetchData() {
+//                 const response = await fetch('http://localhost:3000/');
+//                 if(response.ok) {
+//                     const data = await response.json();
+//                     dataList.innerHTML = '';
+//                     data.forEach(item => {
+//                         const listItem = document.createElement('li');
+//                         listItem.textContent = `${item.name} - ${itme.email}`;
+// "                    const deleteButton = document.createElement('button');
+//                         deleteButton.textContent = 'Delete';
+//                         deleteButton.addEventListener('click', () => deleteData(item.id));
+//                         listItem.appendChild(deleteButton);
+//                         dataList.appendChild(listItem);
+//                     });
+//                 } else {
+//                     console.error('Failed to fetch data');
+//                 }
+//             }
+
+//             async function deleteData(id){
+//                 const response = await fetch(`http://localhost:3000/${id}` , {
+//                     method: 'DELETE',
+//                 });
+
+//                 if(response.ok){
+//                     fetchData();
+//                 } else {
+//                     console.error('Failed to delete data');
+//                 }
+//             }
+//         });
+    </script>
+    
+
+    
+</body>
+</html>
