@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Management</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+        integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
+</head>
+
+
+<body style="background-color: aqua;">
+    <h1 style="text-align: center;">Database Management</h1>
+
+    <!-- Button to open modal for creating a table -->
+    <button id="openCreateTableModal" onclick="openCreateTableModal()" style="position: fixed; top: 50px; right: 10px;">Create Table</button>
+
+    <!-- Modal for creating a table -->
+    <div class="modal" id="createTableModal">
+        <div class="modal-content">
+            <span class="close" id="closeCreateTableModal" onclick="closeCreateTableModal()">&times;</span>
+            <label for="tableName">Table Name:</label>
+            <input type="text" id="tableName" name="tableName" required>
+            <div id="fieldsContainer">
+                <!-- Fields will be dynamically added here -->
+            </div>
+            <button onclick="addTableField()" class="btn-light">Add Field</button>
+            <button onclick="createTable()" class="btn-group">Create Table</button>
+        </div>
+    </div>
+
+    <!-- Container for displaying tables -->
+    <h3>Table Name</h3>
+    <div id="tablesContainer" style="margin-left:20px;">
+        
+    </div>
+
+    <!-- Container for displaying and manipulating table data -->
+    <div id="tableContainer">
+        <button onclick="openAddRowModal()" style="margin-left: 20px; margin-top: 10px;">ADD Row</button>
+    </div>
+
+    <!-- Modal for adding a row -->
+    <div class="modal" id="addRowModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddRowModal()">&times;</span>
+            <label for="tableNameForAddRow">Table Name:</label>
+            <input type="text" id="tableNameForAddRow" name="tableNameForAddRow" required>
+            <!-- Include input fields for each column in your table -->
+            <label for="columnName1">Column 1:</label>
+            <input type="text" id="columnName1" name="columnName1" required>
+            <!-- Repeat for other columns -->
+            <button onclick="addTableRow()" class="btn-group">Add Row</button>
+        </div>
+    </div>
+
+    <!-- Container for displaying table data -->
+    <div id="tableDataContainer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="user.js"></script>
+</body>
+</html>

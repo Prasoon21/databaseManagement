@@ -28,6 +28,7 @@ exports.postUser = async (req, res, next) => {
         console.log(name, email, phone);
 
         const data = await User.create({
+            id: null,
             name: name,
             email: email,
             phone: phone

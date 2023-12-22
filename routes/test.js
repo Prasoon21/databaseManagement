@@ -7,10 +7,10 @@ const rootDir = require('../util/path');
 
 const record = require('../controller/record');
 
-route.get('/', record.getUser);
+route.get('/tables', record.getUser);
 
-route.post('/', record.postUser);
+route.post('/createTable', record.postUser);
 
-route.delete('/:id', record.deleteUser);
+route.get(`/tableData/:tableName`, record.deleteUser);
 
 module.exports = route;
