@@ -167,8 +167,10 @@ async function displayEditableTableData(tableName){
 
         const addRowButton = document.createElement('button');
         addRowButton.textContent = 'Add Row';
-        addRowButton.onclick = () => addTableRow(tableName);
+        addRowButton.onclick = () => addTableRow();
         addRowButton.style.margin = '10px 0 0 20px';
+
+       // addRowButton.style.display = tableData.length > 0 ? 'block' : 'none';
         tableContainer.appendChild(addRowButton);
         } catch (error) {
         console.error('Error fetching table data:', error);
@@ -204,6 +206,9 @@ async function openAddRowModal() {
     const addRowmodal = document.getElementById('addRowModal');
     addRowmodal.style.display = 'contents';
 
+    const tableContainer = document.getElementById("tableContainer");
+    tableContainer.style.display = 'none';
+
     const tableNameForAddRowInput = document.getElementById('tableNameForAddRow');
     tableNameForAddRowInput.value = tableName;
 }
@@ -211,17 +216,25 @@ async function openAddRowModal() {
 function closeAddRowModal() {
     const addRowModal = document.getElementById('addRowModal');
     addRowModal.style.display = 'none';
+
+    const tableContainer = document.getElementById("tableContainer");
+    tableContainer.style.display = 'contents';
 }
 
 async function addTableRow() {
     const tableName = document.getElementById('tableNameForAddRow').value;
+    console.log('ADding row to table:', tableName);
+    
     const rowData = {};
+    //console.log('Row Data:', rowData);
 
     try {
         const response = await axios.post(`http://localhost:3000/tableData/${tableName}`, rowData);
+        //console.log('Response:', response.data);
         const result = response.data;
+        //console.log(result.success);
 
-        if(result.success) {
+        if(result) {
             closeAddRowModal();
             displayEditableTableData(tableName);
         } else{
